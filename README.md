@@ -1,6 +1,5 @@
 # PROJECT.md — Contexto General del Proyecto
 
-> Este archivo es el punto de entrada para el agente. Léelo antes de tocar cualquier archivo del proyecto.
 
 ---
 
@@ -9,7 +8,6 @@
 - **Motor:** Unity (C# + ScriptableObjects)
 - **Género:** Acción-aventura isométrica, similar a *Tunic*
 - **Estado:** Prototipo inicial
-- **Agente:** opencode
 
 ---
 
@@ -55,23 +53,6 @@ Este proyecto usa un modelo inspirado en componentes de React aplicado a Unity:
 - **Prefabs con variantes:** La unidad base se define como Prefab; las variaciones usan Prefab Variants, no duplicados.
 - **Naming:** PascalCase para clases y métodos, camelCase para variables privadas, `_camelCase` para campos serializados privados.
 - **Sin patrón formal aún:** El agente NO debe imponer MVC/ECS. Debe respetar el modelo de componentes descrito arriba.
-
----
-
-## Flujo de Decisión para el Agente
-
-```
-¿Voy a crear lógica nueva?
-    ├── ¿Es reutilizable en más de un sistema?  → va en shared/
-    ├── ¿Es lógica de un sistema del juego?     → va en core/
-    └── ¿Es setup de escena o entrada?          → va en app/
-
-¿Voy a crear datos/configuración?
-    └── Siempre como ScriptableObject en core/ o shared/
-
-¿Voy a crear un objeto de juego?
-    └── Prefab en la carpeta del sistema + componentes pequeños de shared/
-```
 
 ---
 
