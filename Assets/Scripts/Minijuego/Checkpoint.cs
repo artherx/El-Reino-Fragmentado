@@ -14,12 +14,14 @@ public class Checkpoint : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider2D>();
+
         DesactivarCheckpoint();
     }
 
     public void ActivarCheckpoint()
     {
         if (col == null) return;
+
         col.enabled = true;
         flagActivated = false;
     }
@@ -27,8 +29,12 @@ public class Checkpoint : MonoBehaviour
     public void DesactivarCheckpoint()
     {
         if (col == null) return;
+
         col.enabled = false;
-        if (anim != null) anim.enabled = false;
+        flagActivated = false;
+
+        if (anim != null)
+            anim.enabled = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -38,10 +44,12 @@ public class Checkpoint : MonoBehaviour
         flagActivated = true;
 
         PlayerRespawn respawn = collision.GetComponent<PlayerRespawn>();
+
         if (respawn != null)
             respawn.ReachedCheckPoint(transform.position.x, transform.position.y);
 
-        if (anim != null) anim.enabled = true;
+        if (anim != null)
+            anim.enabled = true;
 
         StartCoroutine(WinRoutine());
     }
@@ -49,7 +57,12 @@ public class Checkpoint : MonoBehaviour
     private IEnumerator WinRoutine()
     {
         yield return new WaitForSeconds(4.5f);
+
+        if (SoundManagerMiniJuego.Instance != null)
+            SoundManagerMiniJuego.Instance.PlayGanar();
+
         Time.timeScale = 0f;
+
         if (pantallaGanaste != null)
             pantallaGanaste.SetActive(true);
     }

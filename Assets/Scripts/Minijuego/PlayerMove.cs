@@ -10,26 +10,29 @@ public class PlayerMove : MonoBehaviour
     public float lowJumpMultiplier = 2f;
     public Animator animator;
 
-    Rigidbody2D rb2D;
-    SpriteRenderer spriteRenderer;
-    bool jumpRequested = false; // Flag para pasar el salto a FixedUpdate
+    private Rigidbody2D rb2D;
+    private SpriteRenderer spriteRenderer;
+    private bool jumpRequested = false;
 
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        rb2D.freezeRotation = true;
+
+        if (rb2D != null)
+            rb2D.freezeRotation = true;
     }
 
     void Update()
     {
-        // Solo registra la intención, no aplica la fuerza aquí
         if (Keyboard.current.spaceKey.wasPressedThisFrame && CheckGround.isGrounded)
         {
             jumpRequested = true;
+
+            if (SoundManagerMiniJuego.Instance != null)
+                SoundManagerMiniJuego.Instance.PlaySalto();
         }
 
-        // Animaciones
         if (!CheckGround.isGrounded)
         {
             animator.SetBool("Jump", true);
@@ -43,32 +46,34 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Movimiento horizontal
         if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
         {
             rb2D.linearVelocity = new Vector2(runSpeed, rb2D.linearVelocity.y);
             spriteRenderer.flipX = false;
-            animator.SetBool("Run", true);
+
+            if (CheckGround.isGrounded)
+                animator.SetBool("Run", true);
         }
         else if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
         {
             rb2D.linearVelocity = new Vector2(-runSpeed, rb2D.linearVelocity.y);
             spriteRenderer.flipX = true;
-            animator.SetBool("Run", false);
+
+            if (CheckGround.isGrounded)
+                animator.SetBool("Run", true);
         }
         else
         {
             rb2D.linearVelocity = new Vector2(0, rb2D.linearVelocity.y);
+            animator.SetBool("Run", false);
         }
 
-        // Salto aplicado aquí, en el mismo frame que el movimiento horizontal
         if (jumpRequested)
         {
             rb2D.linearVelocity = new Vector2(rb2D.linearVelocity.x, jumpSpeed);
             jumpRequested = false;
         }
 
-        // Better Jump
         if (betterJump)
         {
             if (rb2D.linearVelocity.y < 0)

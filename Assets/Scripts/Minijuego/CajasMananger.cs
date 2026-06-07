@@ -1,44 +1,59 @@
-
 using UnityEngine;
 
 public class CajasMananger : MonoBehaviour
 {
-    private GameObject[] allBoxes;
+    private CajaCollected[] allBoxes;
     private Checkpoint checkpoint;
-    public static bool todasRecogidas = false; // <- accesible desde PlayerRespawn
+
+    public static bool todasRecogidas = false;
 
     void Start()
     {
         todasRecogidas = false;
-        allBoxes = new GameObject[transform.childCount];
-        for (int i = 0; i < transform.childCount; i++)
-            allBoxes[i] = transform.GetChild(i).gameObject;
+
+        allBoxes = GetComponentsInChildren<CajaCollected>(true);
 
         checkpoint = FindFirstObjectByType<Checkpoint>();
+
         if (checkpoint != null)
             checkpoint.DesactivarCheckpoint();
     }
 
     private void Update()
     {
-        if (!todasRecogidas && transform.childCount == 0)
+        if (!todasRecogidas && TodasLasCajasRecogidas())
         {
             todasRecogidas = true;
             Debug.Log("¡Todas las cajas recogidas!");
+
             if (checkpoint != null)
                 checkpoint.ActivarCheckpoint();
+
             enabled = false;
         }
+    }
+
+    private bool TodasLasCajasRecogidas()
+    {
+        foreach (CajaCollected caja in allBoxes)
+        {
+            if (caja != null && !caja.EstaRecogida())
+                return false;
+        }
+
+        return true;
     }
 
     public void ResetBoxes()
     {
         todasRecogidas = false;
-        foreach (GameObject box in allBoxes)
+
+        foreach (CajaCollected caja in allBoxes)
         {
-            if (box != null)
-                box.SetActive(true);
+            if (caja != null)
+                caja.ResetCaja();
         }
+
         if (checkpoint != null)
             checkpoint.DesactivarCheckpoint();
 
