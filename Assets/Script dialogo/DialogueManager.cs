@@ -1,65 +1,119 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
-public class DialogueManager : MonoBehaviour
+public class DialogoManager : MonoBehaviour
 {
-    [Header("Panel de diálogo")]
-    public GameObject dialoguePanel;
+    public static DialogoManager Instance;
 
-    [Header("Textos")]
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI dialogueText;
+    [Header("UI")]
+    public GameObject panelDialogo;
+    public TextMeshProUGUI textoNombre;
+    public TextMeshProUGUI textoDialogo;
 
-    private string[] dialogueLines;
-    private int currentLine = 0;
-    private bool dialogueActive = false;
+    [Header("Configuración")]
+    public float velocidadTexto = 0.05f; // segundos entre cada letra
+
+    private DialogoData[] dialogos;
+    private int indiceActual = 0;
+    private bool dialogoActivo = false;
+    private bool escribiendo = false;
+    private Coroutine coroutineEscribir;
+
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     void Start()
     {
-        dialoguePanel.SetActive(false);
+        if (panelDialogo != null)
+            panelDialogo.SetActive(false);
     }
 
     void Update()
     {
-        if (dialogueActive && Input.GetMouseButtonDown(0))
+        if (!dialogoActivo) return;
+
+        // Avanza con E, espacio o clic
+        if (Input.GetKeyDown(KeyCode.E) ||
+            Input.GetKeyDown(KeyCode.Space) ||
+            Input.GetMouseButtonDown(0))
         {
-            NextLine();
+            if (escribiendo)
+            {
+                // Si está escribiendo, muestra el texto completo de golpe
+                if (coroutineEscribir != null)
+                    StopCoroutine(coroutineEscribir);
+                textoDialogo.text = dialogos[indiceActual].texto;
+                escribiendo = false;
+            }
+            else
+            {
+                SiguienteDialogo();
+            }
         }
     }
 
-    public void StartDialogue(string characterName, string[] lines)
+    public void IniciarDialogo(DialogoData[] nuevosDialogos)
     {
-        dialogueLines = lines;
-        currentLine = 0;
-        dialogueActive = true;
+        if (dialogoActivo) return;
 
-        dialoguePanel.SetActive(true);
-        nameText.text = characterName;
-        dialogueText.text = dialogueLines[currentLine];
+        dialogos = nuevosDialogos;
+        indiceActual = 0;
+        dialogoActivo = true;
+
+        if (panelDialogo != null)
+            panelDialogo.SetActive(true);
+
+        MostrarDialogoActual();
     }
 
-    void NextLine()
+    private void MostrarDialogoActual()
     {
-        currentLine++;
+        textoNombre.text = dialogos[indiceActual].nombre;
+        coroutineEscribir = StartCoroutine(EscribirTexto(dialogos[indiceActual].texto));
+    }
 
-        if (currentLine < dialogueLines.Length)
+    private IEnumerator EscribirTexto(string texto)
+    {
+        escribiendo = true;
+        textoDialogo.text = "";
+
+        foreach (char letra in texto)
         {
-            dialogueText.text = dialogueLines[currentLine];
+            textoDialogo.text += letra;
+            yield return new WaitForSeconds(velocidadTexto);
+        }
+
+        escribiendo = false;
+    }
+
+    private void SiguienteDialogo()
+    {
+        indiceActual++;
+
+        if (indiceActual < dialogos.Length)
+        {
+            MostrarDialogoActual();
         }
         else
         {
-            EndDialogue();
+            TerminarDialogo();
         }
     }
 
-    void EndDialogue()
+    private void TerminarDialogo()
     {
-        dialogueActive = false;
-        dialoguePanel.SetActive(false);
+        dialogoActivo = false;
+
+        if (panelDialogo != null)
+            panelDialogo.SetActive(false);
     }
 
-    public bool IsDialogueActive()
-    {
-        return dialogueActive;
-    }
+    public bool EstaActivo() => dialogoActivo;
 }
