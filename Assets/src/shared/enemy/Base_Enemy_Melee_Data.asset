@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Base_Enemy_Melee_Data
   m_EditorClassIdentifier: Assembly-CSharp::Core.Combat.EnemyMeleeDataSO
   maxHP: 100
-  speed: 54.11
+  speed: 3
   detectionRange: 10
   damage: 10
   attackRange: 5.6
