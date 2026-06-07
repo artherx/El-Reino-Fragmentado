@@ -6,9 +6,6 @@ public class CajasMananger : MonoBehaviour
     private Checkpoint checkpoint;
     public static bool todasRecogidas = false;
 
-    [Header("Panel de victoria")]
-    public GameObject panelVictoria; // Arrastra aquí el Panel del Canvas en el Inspector
-
     void Start()
     {
         todasRecogidas = false;
@@ -17,10 +14,6 @@ public class CajasMananger : MonoBehaviour
 
         if (checkpoint != null)
             checkpoint.DesactivarCheckpoint();
-
-        // Asegura que el panel esté oculto al inicio
-        if (panelVictoria != null)
-            panelVictoria.SetActive(false);
     }
 
     private void Update()
@@ -30,12 +23,9 @@ public class CajasMananger : MonoBehaviour
             todasRecogidas = true;
             Debug.Log("¡Todas las cajas recogidas!");
 
+            // Solo activa el checkpoint, nada más
             if (checkpoint != null)
                 checkpoint.ActivarCheckpoint();
-
-            // Muestra el panel de victoria
-            if (panelVictoria != null)
-                panelVictoria.SetActive(true);
 
             enabled = false;
         }
@@ -54,20 +44,13 @@ public class CajasMananger : MonoBehaviour
     public void ResetBoxes()
     {
         todasRecogidas = false;
-
         foreach (CajaCollected caja in allBoxes)
         {
             if (caja != null)
                 caja.ResetCaja();
         }
-
         if (checkpoint != null)
             checkpoint.DesactivarCheckpoint();
-
-        // Oculta el panel si se reinicia
-        if (panelVictoria != null)
-            panelVictoria.SetActive(false);
-
         enabled = true;
     }
 }
