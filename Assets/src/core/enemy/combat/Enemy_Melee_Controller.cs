@@ -9,6 +9,7 @@ namespace Core.Combat
         [SerializeField] private Animator animator;
         [SerializeField] private HitboxComponent hitbox;
         [SerializeField] private string targetTag = "Player";
+        [SerializeField] private float groundOffset = 0f;
         
         private EnemyMeleeDataSO meleeData;
         private Transform target;
@@ -38,8 +39,10 @@ namespace Core.Combat
             GameObject playerObj = GameObject.FindGameObjectWithTag(targetTag);
             if (playerObj != null) target = playerObj.transform;
 
-            startPosition = transform.position;
             hitbox.Setup(meleeData.damage, targetTag);
+            
+            SnapToGround();
+            startPosition = transform.position;
             
             PickNewPatrolDestination();
         }
@@ -66,6 +69,8 @@ namespace Core.Combat
             animator.SetBool("IsWalking", true);
 
             if (CheckForPlayer()) return;
+
+            LookAtTarget(currentPatrolDestination);
 
             // Moverse hacia el destino (Usa NavMeshAgent aquí si es 3D, o Vector2.MoveTowards si es 2D)
             transform.position = Vector3.MoveTowards(transform.position, currentPatrolDestination, meleeData.speed * Time.deltaTime);
@@ -160,6 +165,16 @@ namespace Core.Combat
             // Crea un punto aleatorio en un radio (Para 2D usa Random.insideUnitCircle)
             Vector2 randomDir = Random.insideUnitCircle * meleeData.patrolRadius;
             currentPatrolDestination = startPosition + new Vector3(randomDir.x, 0, randomDir.y);
+        }
+
+        private void SnapToGround()
+        {
+            if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hit, 20f))
+            {
+                Vector3 pos = transform.position;
+                pos.y = hit.point.y + groundOffset;
+                transform.position = pos;
+            }
         }
 
         private void LookAtTarget(Vector3 lookPos)
