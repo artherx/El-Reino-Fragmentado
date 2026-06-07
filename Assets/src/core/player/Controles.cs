@@ -31,14 +31,13 @@ public class Controles : MonoBehaviour
     private bool isAttacking;
     private bool isDamage;
 
-    // Propiedad pública para que el script DañoEspada sepa si estamos atacando
     public bool IsAttacking { get { return isAttacking; } }
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 
     void Update()
@@ -55,16 +54,32 @@ public class Controles : MonoBehaviour
         {
             if (!isGrounded)
             {
-                if (rb.linearVelocity.y > 0.1f) { isJumping = true; isFalling = false; }
-                else if (rb.linearVelocity.y < -0.1f) { isJumping = false; isFalling = true; }
+                // FIX: isJumping e isFalling solo pueden ser true si NO estamos en el suelo.
+                // Antes, un rebote de pared podía dar velocidad Y negativa brevemente
+                // aunque estuviéramos en el suelo, activando isFalling incorrectamente.
+                if (rb.linearVelocity.y > 0.1f)
+                {
+                    isJumping = true;
+                    isFalling = false;
+                }
+                else if (rb.linearVelocity.y < -0.1f)
+                {
+                    isJumping = false;
+                    isFalling = true;
+                }
             }
-            else { isJumping = false; isFalling = false; }
+            else
+            {
+                // En el suelo: resetear siempre, sin importar la velocidad Y
+                isJumping = false;
+                isFalling = false;
+            }
 
             anim.SetBool("IsJumping", isJumping);
             anim.SetBool("IsFalling", isFalling);
         }
-        anim.SetBool("IsGrounded", isGrounded);
 
+        anim.SetBool("IsGrounded", isGrounded);
 
         // ------------------ 2. LÓGICA DE COMBATE (Radar) ------------------
         Collider[] enemigosCercanos = Physics.OverlapSphere(transform.position, detectionRadius, enemyLayer);
@@ -89,25 +104,17 @@ public class Controles : MonoBehaviour
             }
         }
 
-        float velX = anim.GetFloat("VelX");
-        float velY = anim.GetFloat("VelY");
-
-        // Comprobamos si hay movimiento en cualquier dirección (Mathf.Abs convierte los números negativos a positivos para la comprobación)
-        bool isMoving = Mathf.Abs(velX) > 0.1f || Mathf.Abs(velY) > 0.1f;
-        anim.SetBool("IsMoving", isMoving);
+        // IsMoving lo maneja LogicaPersonaje.cs desde el input crudo
     }
 
     // --- RUTINAS ---
 
     private IEnumerator RutinaAtaque()
     {
-        isAttacking = true; // Al encender esto, el cubo de la espada empieza a hacer daño
+        isAttacking = true;
         anim.SetBool("IsAttacking", true);
-
-        // Esperamos a que termine la animación de ataque (Ajusta este tiempo a lo que dure tu estocada)
         yield return new WaitForSeconds(0.8f);
-
-        isAttacking = false; // Apagamos el daño de la espada
+        isAttacking = false;
         anim.SetBool("IsAttacking", false);
     }
 
@@ -123,7 +130,6 @@ public class Controles : MonoBehaviour
     }
 
     // --- RECIBIR DAÑO EN EL CUERPO ---
-    // Si el collider del cuerpo del personaje toca un enemigo
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy") && !isDamage)
@@ -138,7 +144,6 @@ public class Controles : MonoBehaviour
         isDamage = true;
         anim.SetBool("IsDamage", true);
 
-        // Si nos pegan mientras atacábamos, se cancela el ataque
         isAttacking = false;
         anim.SetBool("IsAttacking", false);
 

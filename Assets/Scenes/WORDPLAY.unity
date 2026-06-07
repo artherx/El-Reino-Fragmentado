@@ -231,6 +231,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13656635}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &15886522 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fcd095580b6a3a84eb48e1907aca8dc3, type: 3}
+  m_PrefabInstance: {fileID: 1607357113}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &15924276
 GameObject:
   m_ObjectHideFlags: 0
@@ -14523,6 +14528,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e0a1f56f8707e1a4b9ee27e5ed432447, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e0a1f56f8707e1a4b9ee27e5ed432447, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3027896407205900740, guid: e0a1f56f8707e1a4b9ee27e5ed432447, type: 3}
@@ -33587,13 +33596,53 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fcd095580b6a3a84eb48e1907aca8dc3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1607357118}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fcd095580b6a3a84eb48e1907aca8dc3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1607357117}
   m_SourcePrefab: {fileID: 100100000, guid: fcd095580b6a3a84eb48e1907aca8dc3, type: 3}
 --- !u!4 &1607357114 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcd095580b6a3a84eb48e1907aca8dc3, type: 3}
   m_PrefabInstance: {fileID: 1607357113}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1607357117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15886522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab67203f56dce44ebc26eb7fa93de26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::toMiniGame
+  nombreEscena: 
+--- !u!65 &1607357118
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15886522}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.01890144, y: 0.02307305, z: 0.02307305}
+  m_Center: {x: 0.005967397, y: 0, z: 0}
 --- !u!1001 &1608503661
 PrefabInstance:
   m_ObjectHideFlags: 0
