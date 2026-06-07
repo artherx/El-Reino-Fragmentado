@@ -1876,7 +1876,7 @@ RectTransform:
   m_GameObject: {fileID: 608002304}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.571035, y: 0.571035, z: 0.571035}
+  m_LocalScale: {x: 0.7002603, y: 0.7002603, z: 0.7002603}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1819372897}
@@ -7737,6 +7737,7 @@ GameObject:
   - component: {fileID: 1650216205}
   - component: {fileID: 1650216204}
   - component: {fileID: 1650216203}
+  - component: {fileID: 1650216206}
   m_Layer: 5
   m_Name: ButtonReiniciar
   m_TagString: Untagged
@@ -7753,7 +7754,7 @@ RectTransform:
   m_GameObject: {fileID: 1650216201}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3950192, y: 3.0821693, z: 2.2427194}
+  m_LocalScale: {x: 1.710712, y: 3.7796643, z: 2.7502468}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1879085437}
@@ -7761,7 +7762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 131, y: -91}
+  m_AnchoredPosition: {x: 232, y: -91}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1650216203
@@ -7807,7 +7808,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1650216204}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1650216206}
+        m_TargetAssemblyTypeName: PauseMenuManager, Assembly-CSharp
+        m_MethodName: ReiniciarEscena
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1650216204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7846,6 +7859,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650216201}
   m_CullTransparentMesh: 1
+--- !u!114 &1650216206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650216201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024f7135f38a8314a8532fb5ebba53a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseMenuManager
+  panelMenuPausa: {fileID: 0}
+  botonAbrirMenu: {fileID: 0}
+  tiempoInicialDelNivel: 180
 --- !u!1001 &1676308385
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8055,6 +8083,7 @@ GameObject:
   - component: {fileID: 1754819348}
   - component: {fileID: 1754819347}
   - component: {fileID: 1754819346}
+  - component: {fileID: 1754819349}
   m_Layer: 5
   m_Name: ButtonSalir
   m_TagString: Untagged
@@ -8071,7 +8100,7 @@ RectTransform:
   m_GameObject: {fileID: 1754819344}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2547072, y: 2.7721624, z: 2.017145}
+  m_LocalScale: {x: 1.5386474, y: 3.3995028, z: 2.4736247}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1071355101}
@@ -8079,7 +8108,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 134, y: -212}
+  m_AnchoredPosition: {x: 238, y: -212}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1754819346
@@ -8125,7 +8154,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1754819347}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1754819349}
+        m_TargetAssemblyTypeName: PauseMenuManager, Assembly-CSharp
+        m_MethodName: SalirAlMenuInicio
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1754819347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8164,6 +8205,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1754819344}
   m_CullTransparentMesh: 1
+--- !u!114 &1754819349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754819344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024f7135f38a8314a8532fb5ebba53a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseMenuManager
+  panelMenuPausa: {fileID: 0}
+  botonAbrirMenu: {fileID: 0}
+  tiempoInicialDelNivel: 60
 --- !u!1 &1799500376
 GameObject:
   m_ObjectHideFlags: 0

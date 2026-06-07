@@ -8,6 +8,10 @@ public class PauseMenuManager : MonoBehaviour
     public GameObject panelMenuPausa;   // Panel del menú de pausa
     public GameObject botonAbrirMenu;   // Botón que abre el menú
 
+    [Header("Configuración del Minijuego")]
+    [Tooltip("El tiempo en segundos al que volverá el reloj al reiniciar (ej: 120 para 2 minutos)")]
+    public float tiempoInicialDelNivel = 60f;
+
     private bool isPaused = false;
 
     void Update()
@@ -60,7 +64,16 @@ public class PauseMenuManager : MonoBehaviour
 
     public void ReiniciarEscena()
     {
+        // 1. Devolvemos el tiempo a la normalidad
         Time.timeScale = 1f;
+
+        // 2. REINICIAMOS EL TIEMPO EN EL GAME MANAGER
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.tiempoRestante = tiempoInicialDelNivel;
+        }
+
+        // 3. Recargamos la escena
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
