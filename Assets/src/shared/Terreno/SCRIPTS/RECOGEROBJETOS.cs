@@ -1,54 +1,89 @@
 using UnityEngine;
 
-public class RecogerObjetos : MonoBehaviour
+public class LevelManager : MonoBehaviour
 {
     [Header("Jugador")]
-    public GameObject player; // Arrastra aquí tu jugador
+    public GameObject player;
 
-    [Header("Objeto a recoger")]
-    public GameObject item; // Arrastra aquí el objeto que se puede recoger
+    [Header("Nivel actual")]
+    public int currentLevel = 1; // 1, 2 o 3
 
-    [Header("Zona de entrega")]
-    public Transform deliveryPoint; // Arrastra aquí el punto de entrega
+    [Header("Objetos por nivel")]
+    public GameObject[] level1Objects; // 1 objeto
+    public GameObject[] level2Objects; // 3 objetos
+    public GameObject[] level3Objects; // 4 cabezas
 
-    private bool isCarrying = false;
+    [Header("Puestos de entrega")]
+    public Transform level1Delivery;   // 1 puesto
+    public Transform level2Delivery;   // 1 puesto
+    public Transform[] level3Deliveries; // 2 puestos de diferente color
 
-    void Update()
+    [Header("Puertas de desbloqueo")]
+    public GameObject doorLevel1; // Puerta invisible que se activa al completar nivel 1
+    public GameObject doorLevel2; // Puerta invisible que se activa al completar nivel 2
+    public GameObject doorLevel3; // Puerta invisible que se activa al completar nivel 3
+
+    private int collectedCount = 0;
+    private int totalToCollect = 0;
+
+    void Start()
     {
-        // Si estamos cerca del objeto y presionamos E, lo recogemos
-        if (!isCarrying && Input.GetKeyDown(KeyCode.E))
+        SetupLevel();
+    }
+
+    void SetupLevel()
+    {
+        // Configura cuántos objetos hay que recoger según el nivel
+        switch (currentLevel)
         {
-            float distance = Vector3.Distance(player.transform.position, item.transform.position);
-            if (distance < 2f) // distancia mínima para recoger
-            {
-                PickupItem();
-            }
+            case 1:
+                totalToCollect = level1Objects.Length;
+                break;
+            case 2:
+                totalToCollect = level2Objects.Length;
+                break;
+            case 3:
+                totalToCollect = level3Objects.Length;
+                break;
         }
 
-        // Si estamos cargando y llegamos a la zona de entrega
-        if (isCarrying)
+        collectedCount = 0;
+        Debug.Log("Nivel " + currentLevel + " iniciado. Objetos a recoger: " + totalToCollect);
+    }
+
+    public void CollectObject(GameObject obj)
+    {
+        collectedCount++;
+        Debug.Log("Objeto recogido: " + obj.name + " | Total: " + collectedCount + "/" + totalToCollect);
+
+        if (collectedCount >= totalToCollect)
         {
-            float distanceToDelivery = Vector3.Distance(player.transform.position, deliveryPoint.position);
-            if (distanceToDelivery < 2f)
-            {
-                PlaceItem();
-            }
+            UnlockDoor();
         }
     }
 
-    private void PickupItem()
+    void UnlockDoor()
     {
-        isCarrying = true;
-        // Hacemos que el objeto siga al jugador
-        item.transform.SetParent(player.transform);
-        item.transform.localPosition = new Vector3(0, 1, 1); // posición relativa al jugador
+        switch (currentLevel)
+        {
+            case 1:
+                if (doorLevel1 != null) doorLevel1.SetActive(false); // desactiva el collider invisible
+                Debug.Log("✅ Nivel 1 completado. Puerta desbloqueada.");
+                break;
+            case 2:
+                if (doorLevel2 != null) doorLevel2.SetActive(false);
+                Debug.Log("✅ Nivel 2 completado. Puerta desbloqueada.");
+                break;
+            case 3:
+                if (doorLevel3 != null) doorLevel3.SetActive(false);
+                Debug.Log("✅ Nivel 3 completado. Puerta desbloqueada.");
+                break;
+        }
     }
 
-    private void PlaceItem()
+    // Método para mostrar datos en el HUD
+    public string GetHUDInfo()
     {
-        isCarrying = false;
-        // Soltamos el objeto en el punto de entrega
-        item.transform.SetParent(null);
-        item.transform.position = deliveryPoint.position;
+        return "Objetos recogidos: " + collectedCount + " / " + totalToCollect;
     }
 }
