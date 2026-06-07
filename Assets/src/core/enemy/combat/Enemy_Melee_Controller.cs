@@ -120,11 +120,14 @@ namespace Core.Combat
             if (stateTimer <= 0)
             {
                 // Iniciar ataque
+                Debug.Log($"[EnemyMelee] {name} ejecuta ataque causando {meleeData.damage} de daño");
                 animator.SetTrigger("Attack");
+                hitbox.ActivateHitbox();
+                Debug.Log($"[EnemyMelee] Hitbox activada por {meleeData.attackCooldown * 0.5f}s");
+                Invoke(nameof(DeactivateHitboxSafe), meleeData.attackCooldown * 0.5f);
                 stateTimer = meleeData.attackCooldown;
-                // Nota: La activación de la hitbox se hace típicamente vía Animation Events
             }
-            else if (stateTimer <= meleeData.attackCooldown - 0.5f) // Si ya terminó la animación base, verifica si sigue en rango
+            else if (stateTimer <= meleeData.attackCooldown - 0.5f)
             {
                 float distanceToPlayer = Vector3.Distance(transform.position, target.position);
                 if (distanceToPlayer > meleeData.attackRange)
@@ -132,6 +135,11 @@ namespace Core.Combat
                     ChangeState(EnemyState.Chase);
                 }
             }
+        }
+
+        private void DeactivateHitboxSafe()
+        {
+            hitbox.DeactivateHitbox();
         }
 
         protected override void HandleDeath()

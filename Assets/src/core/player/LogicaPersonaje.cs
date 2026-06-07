@@ -21,13 +21,19 @@ public class LogicaPersonaje : MonoBehaviour
     private Vector2 currentInput;
 
     private Quaternion lastValidRotation;
+    private Controles controles;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        // Congelar rotación del Rigidbody completamente:
+        // Que la física NUNCA gire al personaje, solo nuestro código lo hace.
         rb.freezeRotation = true;
+
         lastValidRotation = transform.rotation;
+        controles = GetComponent<Controles>();
 
         if (Camera.main != null)
             cameraTransform = Camera.main.transform;
@@ -35,6 +41,8 @@ public class LogicaPersonaje : MonoBehaviour
 
     void Update()
     {
+        if (controles != null && controles.IsDead) return;
+
         currentInput = Vector2.zero;
         if (Keyboard.current != null)
         {
@@ -61,6 +69,7 @@ public class LogicaPersonaje : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (controles != null && controles.IsDead) return;
         if (cameraTransform == null) return;
 
         Vector3 forward = cameraTransform.forward;

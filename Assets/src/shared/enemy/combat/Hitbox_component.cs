@@ -40,6 +40,7 @@ namespace Shared.Combat
             {
                 if (other.TryGetComponent(out IDamageable damageable))
                 {
+                    Debug.Log($"[Hitbox] Golpe a {other.name} causando {damageAmount} de daño");
                     damageable.TakeDamage(damageAmount);
                     // Opcional: Desactivar la hitbox tras el primer golpe para no hacer doble daño
                     DeactivateHitbox(); 

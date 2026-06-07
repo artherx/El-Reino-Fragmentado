@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System.Collections;
+using Shared;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
-public class Controles : MonoBehaviour
+[RequireComponent(typeof(HealthComponent))]
+public class Controles : MonoBehaviour, IDamageable
 {
     [Header("Configuración del Salto")]
     public float jumpForce = 6.0f;
@@ -17,8 +21,16 @@ public class Controles : MonoBehaviour
     public float detectionRadius = 5f;
     public LayerMask enemyLayer;
 
+    [Header("Vidas")]
+    public int maxHealth = 3;
+    public string menuSceneName = "Menu";
+
     private Rigidbody rb;
     private Animator anim;
+    private HealthComponent healthComponent;
+    private GameObject healthCanvas;
+    private Text healthText;
+    private bool isDead;
 
     // Estados de Movimiento/Salto
     private bool isGrounded;
@@ -31,17 +43,29 @@ public class Controles : MonoBehaviour
     private bool isAttacking;
     private bool isDamage;
 
+    // Propiedades públicas
     public bool IsAttacking { get { return isAttacking; } }
+    public bool IsDead { get { return isDead; } }
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+        healthComponent = GetComponent<HealthComponent>();
+        healthComponent.Initialize(maxHealth);
+        healthComponent.OnDeath += HandleDeath;
+        healthComponent.OnHealthChanged += UpdateHealthUI;
+
+        CreateHealthUI();
+        UpdateHealthUI(maxHealth);
     }
 
     void Update()
     {
+        if (isDead) return;
+
         // ------------------ 1. FÍSICAS Y SALTO ------------------
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
 
@@ -54,32 +78,16 @@ public class Controles : MonoBehaviour
         {
             if (!isGrounded)
             {
-                // FIX: isJumping e isFalling solo pueden ser true si NO estamos en el suelo.
-                // Antes, un rebote de pared podía dar velocidad Y negativa brevemente
-                // aunque estuviéramos en el suelo, activando isFalling incorrectamente.
-                if (rb.linearVelocity.y > 0.1f)
-                {
-                    isJumping = true;
-                    isFalling = false;
-                }
-                else if (rb.linearVelocity.y < -0.1f)
-                {
-                    isJumping = false;
-                    isFalling = true;
-                }
+                if (rb.linearVelocity.y > 0.1f) { isJumping = true; isFalling = false; }
+                else if (rb.linearVelocity.y < -0.1f) { isJumping = false; isFalling = true; }
             }
-            else
-            {
-                // En el suelo: resetear siempre, sin importar la velocidad Y
-                isJumping = false;
-                isFalling = false;
-            }
+            else { isJumping = false; isFalling = false; }
 
             anim.SetBool("IsJumping", isJumping);
             anim.SetBool("IsFalling", isFalling);
         }
-
         anim.SetBool("IsGrounded", isGrounded);
+
 
         // ------------------ 2. LÓGICA DE COMBATE (Radar) ------------------
         Collider[] enemigosCercanos = Physics.OverlapSphere(transform.position, detectionRadius, enemyLayer);
@@ -104,7 +112,11 @@ public class Controles : MonoBehaviour
             }
         }
 
-        // IsMoving lo maneja LogicaPersonaje.cs desde el input crudo
+        float velX = anim.GetFloat("VelX");
+        float velY = anim.GetFloat("VelY");
+
+        bool isMoving = Mathf.Abs(velX) > 0.1f || Mathf.Abs(velY) > 0.1f;
+        anim.SetBool("IsMoving", isMoving);
     }
 
     // --- RUTINAS ---
@@ -129,13 +141,74 @@ public class Controles : MonoBehaviour
         isJumpPending = false;
     }
 
+    public void TakeDamage(int amount)
+    {
+        if (isDead || isDamage)
+        {
+            Debug.Log($"[Player] TakeDamage({amount}) BLOQUEADO: isDead={isDead}, isDamage={isDamage}");
+            return;
+        }
+        Debug.Log($"[Player] Recibido {amount} de daño. Vida actual: {healthComponent.CurrentHealth}");
+        healthComponent.ApplyDamage(amount);
+        if (!isDead)
+            StartCoroutine(RutinaRecibirDaño());
+    }
+
+    private void HandleDeath()
+    {
+        isDead = true;
+        isDamage = false;
+        anim.SetTrigger("Die");
+        StartCoroutine(DeathTransition());
+        Destroy(healthCanvas);
+    }
+
+    private IEnumerator DeathTransition()
+    {
+        float timer = 0f;
+        while (timer < 2f)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        SceneManager.LoadScene(menuSceneName);
+    }
+
+    private void UpdateHealthUI(int currentHP)
+    {
+        if (healthText != null)
+            healthText.text = $"❤️ {currentHP}/{maxHealth}";
+    }
+
+    private void CreateHealthUI()
+    {
+        healthCanvas = new GameObject("HealthCanvas");
+        Canvas canvas = healthCanvas.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        healthCanvas.AddComponent<CanvasScaler>();
+
+        GameObject textObj = new GameObject("HealthText");
+        textObj.transform.SetParent(healthCanvas.transform);
+
+        RectTransform rect = textObj.AddComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0, 1);
+        rect.anchorMax = new Vector2(0, 1);
+        rect.pivot = new Vector2(0, 1);
+        rect.anchoredPosition = new Vector2(20, -20);
+
+        healthText = textObj.AddComponent<Text>();
+        healthText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        healthText.fontSize = 36;
+        healthText.color = Color.white;
+        healthText.alignment = TextAnchor.UpperLeft;
+    }
+
     // --- RECIBIR DAÑO EN EL CUERPO ---
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy") && !isDamage)
         {
-            UnityEngine.Debug.Log("🩸 ¡El CUERPO del personaje recibió daño!");
-            StartCoroutine(RutinaRecibirDaño());
+            TakeDamage(1);
         }
     }
 

@@ -12,7 +12,7 @@ public class ToMiniGame : MonoBehaviour
         if (other.name == "Player" || other.tag == "Player")
         {
             Debug.Log("🚀 El jugador entró al trigger");
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(nombreEscena);
         }
     }
 }
