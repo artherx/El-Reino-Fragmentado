@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f171eefe2580b9e48ad49cc08880d5e8
+timeCreated: 1528774928
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 120676
+  packageName: Simple Heart Health System
+  packageVersion: 1.0
+  assetPath: Assets/HealthHeartSystem/Scenes/ExampleScene.unity
+  uploadId: 286486

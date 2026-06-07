@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -6,22 +7,24 @@ public class LevelManager : MonoBehaviour
     public GameObject player;
 
     [Header("Nivel actual")]
-    public int currentLevel = 1; // 1, 2 o 3
+    public int currentLevel = 1;
 
     [Header("Objetos por nivel")]
-    public GameObject[] level1Objects; // 1 objeto
-    public GameObject[] level2Objects; // 3 objetos
-    public GameObject[] level3Objects; // 4 cabezas
+    public GameObject[] level1Objects;
+    public GameObject[] level2Objects;
+    public GameObject[] level3Objects;
 
-    [Header("Puestos de entrega")]
-    public Transform level1Delivery;   // 1 puesto
-    public Transform level2Delivery;   // 1 puesto
-    public Transform[] level3Deliveries; // 2 puestos de diferente color
+    [Header("Puertas de puente")]
+    public GameObject bridgeDoor1; // Puerta puente tras reto 1
+    public GameObject bridgeDoor2; // Puerta puente tras portal nivel 2
+    public GameObject bridgeDoor3; // Puerta puente tras portal nivel 3
 
-    [Header("Puertas de desbloqueo")]
-    public GameObject doorLevel1; // Puerta invisible que se activa al completar nivel 1
-    public GameObject doorLevel2; // Puerta invisible que se activa al completar nivel 2
-    public GameObject doorLevel3; // Puerta invisible que se activa al completar nivel 3
+    [Header("Puertas de portal")]
+    public GameObject portalDoor2; // Puerta hacia portal nivel 2
+    public GameObject portalDoor3; // Puerta hacia portal nivel 3
+
+    [Header("Puerta extra opcional")]
+    public GameObject extraDoor;
 
     private int collectedCount = 0;
     private int totalToCollect = 0;
@@ -33,18 +36,11 @@ public class LevelManager : MonoBehaviour
 
     void SetupLevel()
     {
-        // Configura cuántos objetos hay que recoger según el nivel
         switch (currentLevel)
         {
-            case 1:
-                totalToCollect = level1Objects.Length;
-                break;
-            case 2:
-                totalToCollect = level2Objects.Length;
-                break;
-            case 3:
-                totalToCollect = level3Objects.Length;
-                break;
+            case 1: totalToCollect = level1Objects.Length; break;
+            case 2: totalToCollect = level2Objects.Length; break;
+            case 3: totalToCollect = level3Objects.Length; break;
         }
 
         collectedCount = 0;
@@ -58,30 +54,57 @@ public class LevelManager : MonoBehaviour
 
         if (collectedCount >= totalToCollect)
         {
-            UnlockDoor();
+            UnlockChallengeDoor();
         }
     }
 
-    void UnlockDoor()
+    void UnlockChallengeDoor()
     {
         switch (currentLevel)
         {
             case 1:
-                if (doorLevel1 != null) doorLevel1.SetActive(false); // desactiva el collider invisible
-                Debug.Log("✅ Nivel 1 completado. Puerta desbloqueada.");
+                if (bridgeDoor1 != null) bridgeDoor1.SetActive(false);
+                Debug.Log("✅ Reto 1 completado. Puerta del puente desbloqueada.");
                 break;
+
             case 2:
-                if (doorLevel2 != null) doorLevel2.SetActive(false);
-                Debug.Log("✅ Nivel 2 completado. Puerta desbloqueada.");
+                if (portalDoor2 != null) portalDoor2.SetActive(false);
+                Debug.Log("✅ Reto 2 completado. Puerta hacia portal desbloqueada.");
                 break;
+
             case 3:
-                if (doorLevel3 != null) doorLevel3.SetActive(false);
-                Debug.Log("✅ Nivel 3 completado. Puerta desbloqueada.");
+                if (portalDoor3 != null) portalDoor3.SetActive(false);
+                Debug.Log("✅ Puzzle nivel 3 completado. Puerta hacia portal desbloqueada.");
                 break;
+        }
+
+        if (extraDoor != null)
+        {
+            extraDoor.SetActive(false);
+            Debug.Log("🚪 Puerta extra desbloqueada.");
         }
     }
 
-    // Método para mostrar datos en el HUD
+    // Llamado desde el script del portal
+    public void OnPortalEntered(int portalLevel)
+    {
+        if (portalLevel == 2 && bridgeDoor2 != null)
+        {
+            bridgeDoor2.SetActive(false);
+            Debug.Log("⚡ Portal nivel 2 cruzado. Puerta del puente desbloqueada.");
+
+            // 🔄 Actualizar automáticamente el nivel a 3
+            currentLevel = 3;
+            SetupLevel(); // reconfigura los objetos y targets del nivel 3
+            Debug.Log("🔄 Nivel cambiado automáticamente a 3 al cruzar la zona 2 del puente.");
+        }
+        else if (portalLevel == 3 && bridgeDoor3 != null)
+        {
+            bridgeDoor3.SetActive(false);
+            Debug.Log("⚡ Portal nivel 3 cruzado. Puerta del puente desbloqueada.");
+        }
+    }
+
     public string GetHUDInfo()
     {
         return "Objetos recogidos: " + collectedCount + " / " + totalToCollect;

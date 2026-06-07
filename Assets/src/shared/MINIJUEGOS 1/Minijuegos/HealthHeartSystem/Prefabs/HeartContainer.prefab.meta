@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9355df0395600f7448d3a85f05310b9b
+timeCreated: 1528777723
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 120676
+  packageName: Simple Heart Health System
+  packageVersion: 1.0
+  assetPath: Assets/HealthHeartSystem/Prefabs/HeartContainer.prefab
+  uploadId: 286486
