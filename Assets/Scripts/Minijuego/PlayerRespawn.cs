@@ -1,7 +1,9 @@
 using UnityEngine;
+
 public class PlayerRespawn : MonoBehaviour
 {
     private Vector2 spawnPoint;
+    private Vector2 spawnInicial; // guarda el punto de inicio original
     private Vector2 lastSafePosition;
     private float safePositionTimer = 0f;
     public float safePositionInterval = 0.5f;
@@ -10,11 +12,9 @@ public class PlayerRespawn : MonoBehaviour
 
     void Start()
     {
-        // Siempre usa la posición del GameObject en la escena
         spawnPoint = transform.position;
+        spawnInicial = transform.position; // nunca cambia
         lastSafePosition = transform.position;
-
-        // Limpia checkpoints viejos de escenas anteriores
         PlayerPrefs.DeleteKey("checkPointPositionX");
         PlayerPrefs.DeleteKey("checkPointPositionY");
     }
@@ -31,8 +31,20 @@ public class PlayerRespawn : MonoBehaviour
 
     public void ReachedCheckPoint(float x, float y)
     {
-        // Guarda el checkpoint solo en memoria, sin PlayerPrefs
         spawnPoint = new Vector2(x, y);
+    }
+
+    // Llamado por GameManager cuando se agotan las vidas
+    public void RespawnAlInicio()
+    {
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        transform.position = spawnInicial;
+        spawnPoint = spawnInicial;
+        lastSafePosition = spawnInicial;
+        isRespawning = false;
     }
 
     public bool Die()
@@ -44,6 +56,14 @@ public class PlayerRespawn : MonoBehaviour
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
 
+        // Descuenta vida — si se agotan, GameManager llama RespawnAlInicio
+        if (GameManager.Instance != null)
+        {
+            bool sinVidas = GameManager.Instance.PerderVida();
+            if (sinVidas) return true;
+        }
+
+        // Tiene vidas restantes — solo reubica
         if (CajasMananger.todasRecogidas)
             transform.position = lastSafePosition;
         else
