@@ -1513,6 +1513,7 @@ GameObject:
   - component: {fileID: 610291512}
   - component: {fileID: 610291511}
   - component: {fileID: 610291510}
+  - component: {fileID: 610291513}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1582,7 +1583,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 610291511}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 610291513}
+        m_TargetAssemblyTypeName: CambiarEscenaDirecta, Assembly-CSharp
+        m_MethodName: CargarEscena
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &610291511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1621,6 +1634,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610291508}
   m_CullTransparentMesh: 1
+--- !u!114 &610291513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610291508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf7ff6b061efd2746ba998e4c6847bf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VolverEscenaAnterior
+  nombreDeLaEscena: WORDPLAY
 --- !u!1 &612302015 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7010719518893672474, guid: 1870cb4342c280e49aa4f2d8d0ab8adc, type: 3}
@@ -6062,7 +6088,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &837913741
 MonoBehaviour:
   m_ObjectHideFlags: 0

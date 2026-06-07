@@ -1,17 +1,19 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class VolverEscenaAnterior : MonoBehaviour
+public class CambiarEscenaDirecta : MonoBehaviour
 {
-    public void Volver()
+    [Header("Configuración")]
+    [Tooltip("Escribe exactamente el nombre de la escena a la que quieres ir.")]
+    public string nombreDeLaEscena;
+
+    // Esta es la función que llamarás desde tus botones o eventos
+    public void CargarEscena()
     {
-        if (!string.IsNullOrEmpty(SceneTracker.instance.lastSceneName))
+        // Verificamos que no hayas olvidado poner el nombre en el Inspector
+        if (!string.IsNullOrEmpty(nombreDeLaEscena))
         {
-            SceneManager.LoadScene(SceneTracker.instance.lastSceneName);
-        }
-        else
-        {
-            Debug.LogWarning("No hay escena anterior guardada.");
+            SceneManager.LoadScene(nombreDeLaEscena);
         }
     }
 }

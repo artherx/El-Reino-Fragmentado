@@ -2008,8 +2008,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 610291513}
-        m_TargetAssemblyTypeName: VolverEscenaAnterior, Assembly-CSharp
-        m_MethodName: Volver
+        m_TargetAssemblyTypeName: CambiarEscenaDirecta, Assembly-CSharp
+        m_MethodName: CargarEscena
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2069,6 +2069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7ff6b061efd2746ba998e4c6847bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VolverEscenaAnterior
+  nombreDeLaEscena: WORDPLAY1
 --- !u!1001 &636100908
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5520,7 +5521,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &837913741
 MonoBehaviour:
   m_ObjectHideFlags: 0

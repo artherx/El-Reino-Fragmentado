@@ -9,9 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/MenuInicio.unity
     guid: eeda37b819e007e479895c2e3e2d2651
   - enabled: 1
-    path: Assets/Scenes/WORDPLAY.unity
-    guid: 61c51782f77e28d4fb79f88ae7db6bb7
-  - enabled: 1
     path: Assets/Scenes/MiniJuego1.unity
     guid: 610e9a19558fbe74683be176528da7e3
   - enabled: 1
@@ -23,6 +20,24 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Escenario.unity
     guid: 6d6abf4c155ef194685e37653885f530
+  - enabled: 0
+    path: Assets/Scenes/WORDPLAY2.unity
+    guid: 9474490a5d20cfc498d017a21eb4c18d
+  - enabled: 1
+    path: Assets/Scenes/NPCDIALOGO.unity
+    guid: acb4be14ef4115840aab10a73458fad2
+  - enabled: 0
+    path: Assets/Scenes/WORDPLAY2.unity
+    guid: 9474490a5d20cfc498d017a21eb4c18d
+  - enabled: 0
+    path: Assets/Scenes/WORDPLAY1 1.unity
+    guid: c2f94a423e00aa74695e47eb9e168341
+  - enabled: 1
+    path: Assets/Scenes/WORDPLAY1.unity
+    guid: 5fdf252945f5be344befdc9e719510ab
+  - enabled: 1
+    path: Assets/Scenes/WORDPLAY.unity
+    guid: 61c51782f77e28d4fb79f88ae7db6bb7
   - enabled: 1
     path: Assets/Scenes/pruebas personaje principal.unity
     guid: e9a4e265adce5764e885286b0e3c9a7b
